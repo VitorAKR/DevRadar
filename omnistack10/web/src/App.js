@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import api from './services/api';
 import './global.css';
 import './App.css';
 import './Sidebar.css';
 import './Main.css';
+
+import DevItem from './components/DevItem';
 
 //React usa JSX (Javascript + XML)
 
@@ -17,7 +20,9 @@ Propriedades - Informações que um componente PAI, passa para um componente FIL
                São os atributos do componente, que podem ser pegos por paramêtro através do 'props' (Ex.: {props.title}).
 ***/
 function App() {
-  //criar os outros estados
+  //mais um estado pra lista de Devs
+  const [devs, setDevs] = useState([]);
+  //criar os outros estados pros campos
   const [github_username, setGithubUsername] = useState('');
   const [techs, setTechs] = useState('');
   //criar estados pra receber latitude e longitude
@@ -41,12 +46,36 @@ function App() {
     )
   }, []);
 
-  //function addDev(*lembrar de add no form)
+  //function pra carregar os Devs salvos
+  useEffect(() =>{
+    async function loadDevs(){
+      const response = await api.get('/devs');
+
+      setDevs(response.data);
+    }
+    //chamar a function
+    loadDevs();
+  }, []);
+
+  //function addDev(*lembrar de add no form onSubmit)
   async function addDev(e){
     //retirando o comportamento padrao
     e.preventDefault();
 
+    //passando dados pra rota post da api
+    const response = await api.post('/devs', {
+      github_username,
+      techs,
+      latitude,
+      longitude
+    })
 
+    console.log(response.data);
+
+    setGithubUsername('');
+    setTechs('');
+    //preciso passar a response ao final se eu quiser ver algum dev listado após o primeiro carregamento
+    setDevs([...devs, response.data]);
   }
 
   return (
@@ -80,59 +109,16 @@ function App() {
         <ul>
           <li className="dev-item">
             <header>
-              <img src="https://avatars.githubusercontent.com/u/13102131?v=4" alt="Vítor Reiter" />
               <div className="user-info">
-                <strong>Parei em: 01:21:07</strong>
+                <strong>Parei em: 01:37:03</strong>
                 <span>No segundo Vídeo</span>
               </div>
             </header>
-              <p>Tell me... do you bleed? Because I have a Band-Aid if you need one.. :)</p>
-              <a href="https://github.com/VitorAKR">Acessar perfil no Github</a>
+              <p>Segundo vídeo se chama "Construindo a interface web"</p>
           </li>
-          <li className="dev-item">
-            <header>
-              <img src="https://avatars.githubusercontent.com/u/13102131?v=4" alt="Vítor Reiter" />
-              <div className="user-info">
-                <strong>Vítor Reiter</strong>
-                <span>Javascript, VBA, Python</span>
-              </div>
-            </header>
-              <p>Tell me... do you bleed? Because I have a Band-Aid if you need one.. :)</p>
-              <a href="https://github.com/VitorAKR">Acessar perfil no Github</a>
-          </li>
-          <li className="dev-item">
-            <header>
-              <img src="https://avatars.githubusercontent.com/u/13102131?v=4" alt="Vítor Reiter" />
-              <div className="user-info">
-                <strong>Vítor Reiter</strong>
-                <span>Javascript, VBA, Python</span>
-              </div>
-            </header>
-              <p>Tell me... do you bleed? Because I have a Band-Aid if you need one.. :)</p>
-              <a href="https://github.com/VitorAKR">Acessar perfil no Github</a>
-          </li>
-          <li className="dev-item">
-            <header>
-              <img src="https://avatars.githubusercontent.com/u/13102131?v=4" alt="Vítor Reiter" />
-              <div className="user-info">
-                <strong>Vítor Reiter</strong>
-                <span>Javascript, VBA, Python</span>
-              </div>
-            </header>
-              <p>Tell me... do you bleed? Because I have a Band-Aid if you need one.. :)</p>
-              <a href="https://github.com/VitorAKR">Acessar perfil no Github</a>
-          </li>
-          <li className="dev-item">
-            <header>
-              <img src="https://avatars.githubusercontent.com/u/13102131?v=4" alt="Vítor Reiter" />
-              <div className="user-info">
-                <strong>Vítor Reiter</strong>
-                <span>Javascript, VBA, Python</span>
-              </div>
-            </header>
-              <p>Tell me... do you bleed? Because I have a Band-Aid if you need one.. :)</p>
-              <a href="https://github.com/VitorAKR">Acessar perfil no Github</a>
-          </li>
+          {devs.map(dev => (
+            <DevItem key={dev._id}  dev={dev}/>
+          ))}
         </ul>
       </main>
     </div>
