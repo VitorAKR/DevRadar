@@ -5,7 +5,7 @@ const routes = require('./routes');
 
 const app = express();
 
-mongoose.connect('mongodb://vireiter_devradar:vireiter_devradar@cluster0-shard-00-00.nvfb9.mongodb.net:27017,cluster0-shard-00-01.nvfb9.mongodb.net:27017,cluster0-shard-00-02.nvfb9.mongodb.net:27017/week10?ssl=true&replicaSet=atlas-11f7g4-shard-0&authSource=admin&retryWrites=true&w=majority');
+mongoose.connect('mongodb://vireiter_devradar:password@cluster0-shard-00-00.nvfb9.mongodb.net:27017,cluster0-shard-00-01.nvfb9.mongodb.net:27017,cluster0-shard-00-02.nvfb9.mongodb.net:27017/week10?ssl=true&replicaSet=atlas-11f7g4-shard-0&authSource=admin&retryWrites=true&w=majority');
 
 //habilitar chamada a API
 app.use(cors({ origin: 'http://localhost:3000' }));
