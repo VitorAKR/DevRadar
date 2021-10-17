@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "axios": "^0.22.0",
+    "cors": "^2.8.5",
     "express": "4.17",
     "mongoose": "^6.0.8",
     "nodemon": "^2.0.13"
